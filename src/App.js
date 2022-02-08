@@ -6,6 +6,11 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Table from 'react-bootstrap/Table';
 import Row from 'react-bootstrap/Row';
 
+import { useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
+
+import Health from './Health';
+
 const endpoints = {
   ops: 'https://7p1eol9lz4.execute-api.us-east-1.amazonaws.com/prod/instances',
   dev: 'https://mab48pe004.execute-api.us-east-1.amazonaws.com/prod/instances',
@@ -95,6 +100,35 @@ function App() {
   const { relay, para } = useParams();
   const deployment = !!para ? `${relay}/${para}` : `${relay}`
   const [instances, setInstances] = useState([]);
+  const { loading, error, data } = useQuery(gql`
+    query {
+      nodes(query: { domain: "${domains[deployment]}" }) {
+        fqdn
+        domain
+        ip
+        launch
+        observations {
+          time
+          status {
+            instance
+            ssh
+            dns_ip
+          }
+          cert {
+            name
+            domains
+            expiry
+          }
+          unit {
+            unit
+            load
+            active
+            sub
+          }
+        }
+      }
+    }
+  `);
   useEffect(() => {
     Object.keys(endpoints).forEach((profile) => {
       setInstances([]);
@@ -175,6 +209,9 @@ function App() {
                     <span className="text-muted" style={{fontSize: '0.7em'}}>
                       .{instance.domain}
                     </span>
+                    <span className="text-muted" style={{fontSize: '0.7em', marginLeft: '0.5em'}}>
+                      ({data.nodes.find((n) => n.fqdn === instance.fqdn).ip})
+                    </span>
                   </td>
                   <td>
                     {
@@ -218,18 +255,7 @@ function App() {
                     }
                   </td>
                   <td>
-                    <a
-                      href={`https://${instance.region}.console.aws.amazon.com/ec2/v2/home?#InstanceDetails:instanceId=${instance.id}`}
-                      title={`aws/ec2/${instance.hostname}`}
-                      style={{ marginRight: '0.5em' }}>
-                      <i className={`bi bi-activity`} />
-                    </a>
-                    <a
-                      href={`https://${instance.region}.console.aws.amazon.com/cloudwatch/home?#logsV2:log-groups/log-group/${instance.fqdn}`}
-                      title={`aws/cloudwatch/${instance.hostname}`}
-                      style={{ marginRight: '0.5em' }}>
-                      <i className={`bi bi-file-earmark-text`} />
-                    </a>
+                    <Health instance={instance} node={data.nodes.find((n) => n.fqdn === instance.fqdn)} />
                   </td>
                   <td>
                     {
@@ -255,7 +281,7 @@ function App() {
                       (!!instance.location && !!instance.location.country && !!instance.location.country.flag)
                         ? (
                             <span
-                              title={`${instance.location.city.name}, ${instance.location.country.name}`}>
+                              title={`${instance.region}: ${instance.location.city.name}, ${instance.location.country.name}`}>
                               {instance.location.country.flag}
                             </span>
                           )
@@ -268,6 +294,15 @@ function App() {
           </tbody>
         </Table>
       </Row>
+      {
+        (!!error)
+          ? (
+              <Row>
+                <pre>{JSON.stringify({ loading, error, data }, null, 2)}</pre>
+              </Row>
+            )
+          : null
+      }
     </Container>
   );
 }

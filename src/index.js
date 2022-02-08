@@ -13,17 +13,56 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import * as Realm from 'realm-web';
+import {
+  ApolloProvider,
+  ApolloClient,
+  HttpLink,
+  InMemoryCache
+} from '@apollo/client';
+
+const realmAppId = 'status-manta-network-qevue';
+//const graphqlUri = `https://realm.mongodb.com/api/client/v2.0/app/${realmAppId}/graphql`
+const graphqlUri = `https://eu-central-1.aws.stitch.mongodb.com/api/client/v2.0/app/${realmAppId}/graphql`
+const apolloClient = new ApolloClient({
+  link: new HttpLink({
+    uri: graphqlUri,
+    fetch: async (uri, options) => {
+      const accessToken = await getValidAccessToken();
+      options.headers.Authorization = `Bearer ${accessToken}`;
+      return fetch(uri, options);
+    },
+  }),
+  cache: new InMemoryCache(),
+});
+const realmApp = new Realm.App({ id: realmAppId });
+async function getValidAccessToken() {
+  if (!realmApp.currentUser) {
+    await realmApp.logIn(Realm.Credentials.anonymous());
+  } else {
+    await realmApp.currentUser.refreshCustomData();
+  }
+  return realmApp.currentUser.accessToken
+}
+
+/*
+const realmCredentials = Realm.Credentials.anonymous();
+const anonymousUser = await realmApp.logIn(realmCredentials);
+*/
+
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<Navigate to={`/dolphin`} />} />
-        <Route exact path="/kusama" element={<Navigate to={`/kusama/calamari`} />} />
-        <Route exact path="/polkadot" element={<Navigate to={`/polkadot/manta`} />} />
-        <Route path="/:relay" element={<App />} />
-        <Route path="/:relay/:para" element={<App />} />
-      </Routes>
-    </Router>
+    <ApolloProvider client={apolloClient}>
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<Navigate to={`/dolphin`} />} />
+          <Route exact path="/kusama" element={<Navigate to={`/kusama/calamari`} />} />
+          <Route exact path="/polkadot" element={<Navigate to={`/polkadot/manta`} />} />
+          <Route path="/:relay" element={<App />} />
+          <Route path="/:relay/:para" element={<App />} />
+        </Routes>
+      </Router>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
