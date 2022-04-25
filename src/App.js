@@ -27,9 +27,7 @@ const fetchOptions = {
 };
 
 const domains = {
-  dolphin: 'dolphin.red',
-  baikal: 'baikal.manta.systems',
-  como: 'como.manta.systems',
+  'rococo/dolphin': 'rococo.dolphin.engineering',
   'baikal/calamari-testnet': 'baikal.testnet.calamari.systems',
   'baikal/manta-testnet': 'baikal.testnet.manta.systems',
   'como/calamari-testnet': 'como.testnet.calamari.systems',
@@ -37,6 +35,8 @@ const domains = {
   'kusama/calamari': 'calamari.systems',
   'polkadot/manta': 'manta.systems',
   'westend/manta': 'westend.manta.systems',
+  baikal: 'baikal.manta.systems',
+  como: 'como.manta.systems',
 };
 const notNodes = [
   'bench-bot.manta.systems'
@@ -168,7 +168,7 @@ function App() {
           <NavDropdown.Divider />
           <NavDropdown.Item href="/westend/manta" eventKey="westend/manta">westend/manta</NavDropdown.Item>
           <NavDropdown.Divider />
-          <NavDropdown.Item href="/dolphin" eventKey="dolphin">dolphin</NavDropdown.Item>
+          <NavDropdown.Item href="/rococo/dolphin" eventKey="/rococo/dolphin">rococo/dolphin</NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item href="/baikal" eventKey="baikal">baikal</NavDropdown.Item>
           <NavDropdown.Item href="/baikal/calamari-testnet" eventKey="baikal/calamari-testnet">baikal/calamari-testnet</NavDropdown.Item>

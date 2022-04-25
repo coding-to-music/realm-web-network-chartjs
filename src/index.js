@@ -55,7 +55,7 @@ ReactDOM.render(
     <ApolloProvider client={apolloClient}>
       <Router>
         <Routes>
-          <Route exact path="/" element={<Navigate to={`/dolphin`} />} />
+          <Route exact path="/" element={<Navigate to={`/rococo/dolphin`} />} />
           <Route exact path="/kusama" element={<Navigate to={`/kusama/calamari`} />} />
           <Route exact path="/polkadot" element={<Navigate to={`/polkadot/manta`} />} />
           <Route path="/:relay" element={<App />} />
