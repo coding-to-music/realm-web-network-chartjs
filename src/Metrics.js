@@ -13,10 +13,15 @@ const jobMap = {
   'calamari.systems': '.*calamari.*',
   'rococo.dolphin.engineering': '.*dolphin.*',
 };
+const periods = [
+  { label: 'minute', value: 'm' },
+  { label: 'hour', value: 'h' },
+  { label: 'day', value: 'd' }
+];
 
 function Metrics(props) {
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState({ label: 'minute', value: 'm' });
+  const [period, setPeriod] = useState(periods.find(p => p.value === 'h'));
   const [data, setData] = useState({ labels: [], datasets: [] });
   useEffect(() => {
     if (!!jobMap[props.domain]) {
@@ -70,11 +75,7 @@ function Metrics(props) {
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 {
-                  [
-                    { label: 'minute', value: 'm' },
-                    { label: 'hour', value: 'h' },
-                    { label: 'day', value: 'd' }
-                  ].map((period) => (
+                  periods.map((period) => (
                     <Dropdown.Item key={period.value} onClick={() => { setPeriod(period); setLoading(true); }}>
                       {period.label}
                     </Dropdown.Item>
