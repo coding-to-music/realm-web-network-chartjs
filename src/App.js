@@ -210,7 +210,15 @@ function App() {
                       .{instance.domain}
                     </span>
                     <span className="text-muted" style={{fontSize: '0.7em', marginLeft: '0.5em'}}>
-                      ({data.nodes.find((n) => n.fqdn === instance.fqdn).ip})
+                      (
+                        {
+                          (!!data && !!data.nodes && !!data.nodes.length)
+                            ? (
+                                data.nodes.find((n) => n.fqdn === instance.fqdn).ip
+                              )
+                            : null
+                        }
+                      )
                     </span>
                   </td>
                   <td>
@@ -255,7 +263,13 @@ function App() {
                     }
                   </td>
                   <td>
-                    <Health instance={instance} node={data.nodes.find((n) => n.fqdn === instance.fqdn)} />
+                    {
+                      (!!data && !!data.nodes && !!data.nodes.length)
+                        ? (
+                            <Health instance={instance} node={data.nodes.find((n) => n.fqdn === instance.fqdn)} />
+                          )
+                        : null
+                    }
                   </td>
                   <td>
                     {
