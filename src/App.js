@@ -10,6 +10,7 @@ import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 
 import Health from './Health';
+import Metrics from './Metrics';
 
 const endpoints = {
   ops: 'https://7p1eol9lz4.execute-api.us-east-1.amazonaws.com/prod/instances',
@@ -182,12 +183,9 @@ function App() {
       <Row>
         <h2>
           {relay}
-          {
-            !!para
-              ? ` / ${para}`
-              : null
-          }
+          {!!para ? ` / ${para}` : null}
         </h2>
+        <h3>{domains[deployment]}</h3>
       </Row>
       <Row>
         <Table striped>
@@ -307,6 +305,9 @@ function App() {
             }
           </tbody>
         </Table>
+      </Row>
+      <Row>
+        <Metrics domain={domains[deployment]} />
       </Row>
       {
         (!!error)
