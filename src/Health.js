@@ -31,7 +31,7 @@ function Health(props) {
           loading: false,
           unreachable: true
         })
-        console.error(e);
+        //console.error(e);
       });
   });
   return (
