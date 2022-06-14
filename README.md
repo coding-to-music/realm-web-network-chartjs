@@ -1,3 +1,37 @@
+# realm-web-network-chartjs
+
+# 🚀 Javascript full-stack 🚀
+
+https://github.com/coding-to-music/realm-web-network-chartjs
+
+https://realm-web-network-chartjs.vercel.app
+
+From / By https://github.com/Manta-Network/status.manta.network
+
+https://github.com/Manta-Network/status.manta.network
+
+https://status.manta.network
+
+https://status.manta.network/rococo/dolphin
+
+## Environment variables:
+
+```java
+
+```
+
+## GitHub
+
+```java
+git init
+git add .
+git remote remove origin
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:coding-to-music/realm-web-network-chartjs.git
+git push -u origin main
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
